@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# .gitignore
+Data/Allergen30/images/
+Data/food-101/images/
