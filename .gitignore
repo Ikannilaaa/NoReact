@@ -15,5 +15,5 @@
 local.properties
 
 # .gitignore
-Data/Allergen30/images/
-Data/food-101/images/
+data/food-101/images/
+data/food101_split
