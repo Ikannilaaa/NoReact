@@ -47,11 +47,6 @@ public class AccountFragment extends Fragment {
         });
     }
 
-//    private void observeViewModel() {
-//        accountViewModel.getLogoutSuccess().observe(getViewLifecycleOwner(), success -> {
-//        });
-//    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

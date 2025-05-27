@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
         // Setup bottom navigation
         navView = binding.navView;
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_scan,
+                R.id.navigation_home,
                 R.id.navigation_chat,
+                R.id.navigation_scan,
                 R.id.navigation_history,
                 R.id.navigation_account)
                 .build();
