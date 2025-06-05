@@ -1,46 +1,216 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Your Allergen"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"
+        android:textColor="@color/black"/>
+
+    <!-- Row 1 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/egg_select"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Choose Your Allergen"
-            android:textColor="#000000"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Egg"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
 
-        <GridLayout
-            android:id="@+id/grid_allergens"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/celery_select"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:useDefaultMargins="true"
-            android:alignmentMode="alignMargins"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Celery"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
 
-        <Button
-            android:id="@+id/btn_continue"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/milk_select"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Done"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:background="@drawable/button_gradient"
-            android:padding="12dp"
-            android:layout_marginBottom="32dp"/>
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Milk"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
     </LinearLayout>
-</ScrollView>
+
+    <!-- Row 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/wheat_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Wheat"
+            android:textAlignment="center"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/fish_select"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Fish"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/crustacean_select"
+            android:textAlignment="center"
+            android:text="Crustacean"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+    </LinearLayout>
+
+    <!-- Row 3 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/soybean_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Soybean"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/peanut_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Peanut"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/mustard_select"
+            android:textAlignment="center"
+            android:text="Mustard"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+    </LinearLayout>
+
+    <!-- Row 4 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/sesame_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Sesame"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/sulphite_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Sulphite"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/molluscs_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Molluscs"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+    </LinearLayout>
+
+    <!-- Row 5 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/treenut_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Tree Nut"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="0dp"
+            android:id="@+id/lupine_select"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Lupine"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_margin="4dp"/>
+
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"/>-->
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Done"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:background="@drawable/gradient_button"
+        android:layout_marginTop="20dp"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

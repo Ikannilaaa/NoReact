@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
+    android:background="@drawable/tl100tr100bffffff75"
     tools:context=".ui.login.SignupActivity">
 
     <androidx.cardview.widget.CardView
@@ -65,7 +66,8 @@
                 android:drawableLeft="@drawable/baseline_account_circle_24"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -80,14 +82,16 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"/>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
                 android:id="@+id/signup_button"
-                android:text="SIGN UP"
-                android:textSize="18sp"
-                android:layout_marginTop="30dp"
-                app:cornerRadius="20dp"/>
+                android:layout_height="50dp"
+                android:text="Sign Up"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:background="@drawable/gradient_button"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
