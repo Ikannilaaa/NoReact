@@ -52,10 +52,24 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+
+    // Networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Image loading
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+
+    // RecyclerView FlexboxLayout
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+    // CardView (Sudah termasuk di dalam Material, tapi tidak apa-apa jika dideklarasikan)
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.google.android.material:material:1.12.0")
 }
