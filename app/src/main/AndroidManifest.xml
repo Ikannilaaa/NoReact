@@ -30,6 +30,19 @@
         android:theme="@style/Theme.NoReact"
         tools:targetApi="31">
 
+        <!-- Login Activity -->
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.NoReact.NoActionBar" />
+
+        <!-- Signup Activity -->
+        <activity
+            android:name=".ui.login.SignupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.NoReact.NoActionBar" />
+
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,8 +53,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.login.SignupActivity"/>
-        <activity android:name=".ui.onboarding.AllergySelectionActivity" />
+        <activity
+            android:name=".ui.history.HistoryDetailActivity"
+            android:label="@string/history_detail_title"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.NoReact" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

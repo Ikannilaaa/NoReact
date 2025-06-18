@@ -1,35 +1,58 @@
-<!-- res/layout/item_allergen.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/allergenItem"
-    android:layout_width="wrap_content"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="4dp">
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
 
-    <FrameLayout
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:background="@drawable/allergen_circle_background"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_notifications_black_24dp"
-            android:tint="#000000" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Allergen"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginTop="4dp"/>
-</LinearLayout>
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <View
+            android:id="@+id/allergen_indicator"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
+            android:background="#FF6B6B" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_allergen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TELUR"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_allergen_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Eggs - Can cause allergic reactions"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="⚠️"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    app:tint="@color/common_google_signin_btn_tint">
+
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M8.1,13.34L12,17.77L15.9,13.34L12,8.91L8.1,13.34ZM12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2ZM12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20Z"/>
+
+    <!-- Food icon alternative -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M18.06,22.99H1.94C1.28,22.99 0.74,22.45 0.74,21.79V2.85C0.74,2.19 1.28,1.65 1.94,1.65H18.06C18.72,1.65 19.26,2.19 19.26,2.85V21.79C19.26,22.45 18.72,22.99 18.06,22.99ZM5.71,18.96C5.71,19.62 6.25,20.16 6.91,20.16H13.09C13.75,20.16 14.29,19.62 14.29,18.96V5.68C14.29,5.02 13.75,4.48 13.09,4.48H6.91C6.25,4.48 5.71,5.02 5.71,5.68V18.96Z"/>
+</vector>

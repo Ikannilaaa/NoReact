@@ -51,37 +51,49 @@ public class LoginActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)) {
             loginEmail.setError("Email is required");
+            loginEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
             loginPassword.setError("Password is required");
+            loginPassword.requestFocus();
             return;
         }
 
         loginButton.setEnabled(false);
+        loginButton.setText("Logging in...");
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
+                    loginButton.setEnabled(true);
+                    loginButton.setText("Log In");
+
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
-                            Toast.makeText(LoginActivity.this,
-                                    "Login successful!",
-                                    Toast.LENGTH_SHORT).show();
-                            redirectToMain();
-                        } else {
-                            Toast.makeText(LoginActivity.this,
-                                    "Please verify your email first",
-                                    Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
-                            loginButton.setEnabled(true);
+                        if (user != null) {
+                            if (user.isEmailVerified()) {
+                                Toast.makeText(LoginActivity.this,
+                                        "Login successful!",
+                                        Toast.LENGTH_SHORT).show();
+                                redirectToMain();
+                            } else {
+                                Toast.makeText(LoginActivity.this,
+                                        "Please verify your email first. Check your inbox.",
+                                        Toast.LENGTH_LONG).show();
+                                // Optionally send verification email again
+                                user.sendEmailVerification();
+                                mAuth.signOut();
+                            }
                         }
                     } else {
+                        String errorMessage = "Login failed";
+                        if (task.getException() != null) {
+                            errorMessage = task.getException().getMessage();
+                        }
                         Toast.makeText(LoginActivity.this,
-                                "Login failed: " + task.getException().getMessage(),
+                                errorMessage,
                                 Toast.LENGTH_SHORT).show();
-                        loginButton.setEnabled(true);
                     }
                 });
     }

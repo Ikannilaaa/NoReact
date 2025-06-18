@@ -75,6 +75,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         signupButton.setEnabled(false);
+        signupButton.setText("Creating Account...");
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -88,6 +89,7 @@ public class SignupActivity extends AppCompatActivity {
                         }
                     } else {
                         signupButton.setEnabled(true);
+                        signupButton.setText("Sign Up");
                         Toast.makeText(SignupActivity.this,
                                 "Registration failed: " + task.getException().getMessage(),
                                 Toast.LENGTH_SHORT).show();
@@ -104,20 +106,29 @@ public class SignupActivity extends AppCompatActivity {
 
         db.collection("users").document(userId)
                 .set(user)
+                .addOnSuccessListener(aVoid -> {
+                    // Data saved successfully
+                })
                 .addOnFailureListener(e -> {
+                    Toast.makeText(SignupActivity.this,
+                            "Failed to save user data: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void sendEmailVerification(FirebaseUser user) {
         user.sendEmailVerification()
                 .addOnCompleteListener(task -> {
+                    signupButton.setEnabled(true);
+                    signupButton.setText("Sign Up");
+
                     if (task.isSuccessful()) {
                         Toast.makeText(SignupActivity.this,
-                                "Verification email sent. Please check your email.",
+                                "Registration successful! Verification email sent. Please check your email.",
                                 Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(SignupActivity.this,
-                                "Failed to send verification email.",
+                                "Registration successful but failed to send verification email.",
                                 Toast.LENGTH_SHORT).show();
                     }
                     redirectToLogin();

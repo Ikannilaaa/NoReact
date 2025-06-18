@@ -7,4 +7,30 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Existing colors -->
+    <color name="primary_orange">#FF6B35</color>
+    <color name="primary_color">#FF8800</color>
+    <color name="secondary_color">#F9B90A</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <!-- Status colors -->
+    <color name="success_color">#4CAF50</color>
+    <color name="warning_color">#FF9800</color>
+    <color name="danger_color">#F44336</color>
+
+    <!-- Background colors -->
+    <color name="image_background">#F5F5F5</color>
+    <color name="border_color">#E0E0E0</color>
+    <color name="border_light">#EEEEEE</color>
+
+    <!-- Icon colors -->
+    <color name="icon_color">#616161</color>
+    <color name="gray_400">#BDBDBD</color>
+
+    <!-- Utility -->
+    <color name="transparent">#00000000</color>
 </resources>

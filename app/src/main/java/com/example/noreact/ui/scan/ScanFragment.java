@@ -3,352 +3,473 @@ package com.example.noreact.ui.scan;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.LinearLayout;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.noreact.databinding.FragmentScanBinding;
-import com.google.android.flexbox.FlexboxLayoutManager;
+import com.example.noreact.R;
+import com.example.noreact.model.HistoryItem;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.Response;
 
 public class ScanFragment extends Fragment {
 
-    private FragmentScanBinding binding;
-    private Uri selectedImageUri;
-    private File capturedImageFile;
-    private ActivityResultLauncher<Intent> galleryLauncher;
-    private ActivityResultLauncher<Intent> cameraLauncher;
-    private ActivityResultLauncher<String> permissionLauncher;
-    private AllergenAdapter allergenAdapter;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_GALLERY = 2;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int REQUEST_STORAGE_PERMISSION = 101;
 
-    // API Key Anda
+    private ImageView imageView;
+    private Button btnCamera, btnGallery, btnDetect;
+    private ProgressBar progressBar;
+    private TextView tvResult;
+    private LinearLayout placeholderLayout;
+    private CardView resultCard;
+    private Bitmap selectedBitmap;
+
+    // API Roboflow configuration
+    private static final String API_URL = "https://detect.roboflow.com";
     private static final String API_KEY = "wVtzCReuYMeUQAhnnM83";
-    private static final int MAX_IMAGE_DIMENSION = 1024; // Batas resolusi gambar
+    private static final String MODEL_ID = "indonesianfoodallergendetector-zd40l/7";
 
-    @Override
+    // Allergen data
+    private Map<String, List<String>> allergenData;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentScanBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View root = inflater.inflate(R.layout.fragment_scan, container, false);
 
-        new ViewModelProvider(this).get(ScanViewModel.class);
-
-        setupActivityResultLaunchers();
-        setupButtonListeners();
-        setupRecyclerView();
+        initViews(root);
+        initAllergenData();
+        setupClickListeners();
 
         return root;
     }
 
-    private void setupActivityResultLaunchers() {
-        permissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        openCamera();
-                    } else {
-                        Toast.makeText(getContext(), "Izin kamera ditolak", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK &&
-                            result.getData() != null && result.getData().getData() != null) {
-                        selectedImageUri = result.getData().getData();
-                        loadImageFromUri(selectedImageUri);
-                    }
-                });
-
-        cameraLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        if (capturedImageFile != null && capturedImageFile.exists()) {
-                            selectedImageUri = Uri.fromFile(capturedImageFile);
-                            loadImageFromUri(selectedImageUri);
-                        }
-                    }
-                });
+    private void initViews(View root) {
+        imageView = root.findViewById(R.id.imageView);
+        btnCamera = root.findViewById(R.id.btnCamera);
+        btnGallery = root.findViewById(R.id.btnGallery);
+        btnDetect = root.findViewById(R.id.btnDetect);
+        progressBar = root.findViewById(R.id.progressBar);
+        tvResult = root.findViewById(R.id.tvResult);
+        placeholderLayout = root.findViewById(R.id.placeholderLayout);
+        resultCard = root.findViewById(R.id.resultCard);
     }
 
-    private void setupButtonListeners() {
-        binding.galleryButton.setOnClickListener(v -> openGallery());
-        binding.cameraButton.setOnClickListener(v -> checkCameraPermission());
-        binding.detectAllergenButton.setOnClickListener(v -> detectAllergen());
+    private void initAllergenData() {
+        allergenData = new HashMap<>();
+        allergenData.put("ayam_geprek", Arrays.asList("telur", "gluten", "cabai"));
+        allergenData.put("ayam_goreng", Arrays.asList("gluten"));
+        allergenData.put("ayam_pop", Arrays.asList("santan"));
+        allergenData.put("cumi_goreng", Arrays.asList("seafood", "gluten"));
+        allergenData.put("daging_rendang", Arrays.asList("santan", "cabai"));
+        allergenData.put("dendeng_batokok", Arrays.asList("cabai"));
+        allergenData.put("gado_gado", Arrays.asList("kacang", "telur", "kedelai", "kecambah", "cabai"));
+        allergenData.put("ayam_gulai", Arrays.asList("santan", "cabai"));
+        allergenData.put("gulai_ikan", Arrays.asList("santan", "seafood", "cabai"));
+        allergenData.put("gulai_tambusu", Arrays.asList("telur", "santan", "cabai"));
+        allergenData.put("gulai_tunjang", Arrays.asList("santan", "cabai"));
+        allergenData.put("ikan_goreng", Arrays.asList("seafood"));
+        allergenData.put("kentang_goreng", Arrays.asList("gluten"));
+        allergenData.put("lontong_kupang", Arrays.asList("kerang", "gluten", "cabai"));
+        allergenData.put("lumpia", Arrays.asList("gluten", "telur", "kedelai", "cabai"));
+        allergenData.put("mie_goreng", Arrays.asList("gluten", "telur", "kedelai", "cabai"));
+        allergenData.put("nasi_goreng", Arrays.asList("telur", "kedelai", "cabai"));
+        allergenData.put("pecel_sayur", Arrays.asList("kacang", "kecambah", "cabai"));
+        allergenData.put("rawon", Arrays.asList("kedelai"));
+        allergenData.put("sate", Arrays.asList("kacang", "kedelai", "cabai"));
+        allergenData.put("soto", Arrays.asList("santan", "telur", "kecambah", "cabai"));
+        allergenData.put("telur_balado", Arrays.asList("telur", "cabai"));
+        allergenData.put("telur_dadar", Arrays.asList("telur"));
     }
 
-    private void setupRecyclerView() {
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
-        binding.allergensRecyclerView.setLayoutManager(layoutManager);
+    private void setupClickListeners() {
+        btnCamera.setOnClickListener(v -> {
+            if (checkCameraPermission()) {
+                openCamera();
+            } else {
+                requestCameraPermission();
+            }
+        });
+
+        btnGallery.setOnClickListener(v -> {
+            if (checkStoragePermission()) {
+                openGallery();
+            } else {
+                requestStoragePermission();
+            }
+        });
+
+        btnDetect.setOnClickListener(v -> {
+            if (selectedBitmap != null) {
+                detectAllergen();
+            } else {
+                Toast.makeText(getContext(), getString(R.string.select_image_first), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void loadImageFromUri(Uri uri) {
-        try {
-            Bitmap bitmap = getScaledBitmapFromUri(uri);
-            binding.imageView.setImageBitmap(bitmap);
-            binding.emptyStateLayout.setVisibility(View.GONE);
-            binding.detectAllergenButton.setEnabled(true);
-            hideResults();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Utils.showSnackbar(binding.getRoot(), "Gagal memuat gambar");
+    private boolean checkCameraPermission() {
+        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean checkStoragePermission() {
+        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+    }
+
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
+    }
+
+    private void openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        galleryLauncher.launch(intent);
-    }
-
-    private void checkCameraPermission() {
-        permissionLauncher.launch(Manifest.permission.CAMERA);
-    }
-
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            capturedImageFile = new File(requireContext().getCacheDir(), "camera_captured_" + System.currentTimeMillis() + ".jpg");
-            Uri uri = FileProvider.getUriForFile(
-                    requireContext(),
-                    requireContext().getPackageName() + ".provider",
-                    capturedImageFile
-            );
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            cameraLauncher.launch(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Utils.showSnackbar(binding.getRoot(), "Gagal membuka kamera.");
-        }
-    }
-
-// Key fixes untuk ScanFragment.java
-
-    // 1. Update detectAllergen method
-    private void detectAllergen() {
-        if (selectedImageUri == null) {
-            Utils.showSnackbar(binding.imageView, "Pilih gambar terlebih dahulu.");
-            return;
-        }
-
-        showLoading(true);
-
-        try {
-            // Convert URI to File dengan error handling yang lebih baik
-            InputStream inputStream = requireContext().getContentResolver().openInputStream(selectedImageUri);
-            if (inputStream == null) {
-                showLoading(false);
-                Utils.showSnackbar(binding.imageView, "Gagal membaca gambar.");
-                return;
-            }
-
-            File file = new File(requireContext().getCacheDir(),
-                    "temp_image_" + System.currentTimeMillis() + ".jpg");
-
-            FileOutputStream outputStream = new FileOutputStream(file);
-            byte[] buffer = new byte[2048];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-            outputStream.close();
-            inputStream.close();
-
-            // Compress image jika terlalu besar
-            if (file.length() > 4 * 1024 * 1024) { // 4MB
-                compressImage(file);
-            }
-
-            // Create request body
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-
-            // Make API call
-            RoboflowAPI api = RoboflowAPI.create();
-            Call<RoboflowResponse> call = api.detectFood(body, API_KEY);
-
-            call.enqueue(new Callback<RoboflowResponse>() {
-                @Override
-                public void onResponse(Call<RoboflowResponse> call, Response<RoboflowResponse> response) {
-                    showLoading(false);
-
-                    // Log response untuk debugging
-                    android.util.Log.d("ScanFragment", "Response code: " + response.code());
-                    if (response.body() != null) {
-                        android.util.Log.d("ScanFragment", "Predictions count: " +
-                                (response.body().getPredictions() != null ? response.body().getPredictions().size() : "null"));
-                    }
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        handleDetectionResult(response.body());
-                    } else {
-                        String errorMsg = "Gagal mendeteksi makanan. Code: " + response.code();
-                        if (response.errorBody() != null) {
-                            try {
-                                errorMsg += " - " + response.errorBody().string();
-                            } catch (Exception e) {
-                                // ignore
-                            }
-                        }
-                        Utils.showSnackbar(binding.imageView, errorMsg);
-                    }
-
-                    // Clean up temp file
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RoboflowResponse> call, Throwable t) {
-                    showLoading(false);
-                    android.util.Log.e("ScanFragment", "API call failed", t);
-                    Utils.showSnackbar(binding.imageView, "Error: " + t.getMessage());
-
-                    // Clean up temp file
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                }
-            });
-
-        } catch (Exception e) {
-            showLoading(false);
-            android.util.Log.e("ScanFragment", "Exception in detectAllergen", e);
-            Utils.showSnackbar(binding.imageView, "Terjadi kesalahan: " + e.getMessage());
-        }
-    }
-
-    // 2. Tambahkan method untuk compress image
-    private void compressImage(File file) {
-        try {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-            out.close();
-        } catch (Exception e) {
-            android.util.Log.e("ScanFragment", "Failed to compress image", e);
-        }
-    }
-
-    // 3. Update handleDetectionResult dengan threshold confidence
-    private void handleDetectionResult(RoboflowResponse response) {
-        if (response.getPredictions() != null && !response.getPredictions().isEmpty()) {
-            // Filter predictions dengan confidence > 0.3 (30%)
-            RoboflowResponse.Prediction bestPrediction = null;
-            double highestConfidence = 0.3; // minimum threshold
-
-            for (RoboflowResponse.Prediction prediction : response.getPredictions()) {
-                if (prediction.getConfidence() > highestConfidence) {
-                    bestPrediction = prediction;
-                    highestConfidence = prediction.getConfidence();
-                }
-            }
-
-            if (bestPrediction != null) {
-                String foodName = bestPrediction.getClassName();
-                double confidence = bestPrediction.getConfidence();
-
-                // Format food name for display
-                String displayName = AllergenData.formatFoodName(foodName);
-
-                // Get allergens for this food
-                List<String> allergens = AllergenData.getAllergens(foodName);
-
-                // Display results
-                showDetectionResults(displayName, confidence, allergens);
-            } else {
-                Utils.showSnackbar(binding.imageView, "Confidence terlalu rendah. Coba dengan gambar yang lebih jelas.");
-            }
-        } else {
-            Utils.showSnackbar(binding.imageView, "Tidak dapat mendeteksi makanan. Coba dengan gambar lain.");
-        }
-    }
-
-    private Bitmap getScaledBitmapFromUri(Uri uri) throws IOException {
-        InputStream input = requireContext().getContentResolver().openInputStream(uri);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(input, null, options);
-        if (input != null) input.close();
-
-        int originalWidth = options.outWidth;
-        int originalHeight = options.outHeight;
-        int scale = 1;
-
-        while (originalWidth / scale / 2 >= MAX_IMAGE_DIMENSION || originalHeight / scale / 2 >= MAX_IMAGE_DIMENSION) {
-            scale *= 2;
-        }
-
-        BitmapFactory.Options scaleOptions = new BitmapFactory.Options();
-        scaleOptions.inSampleSize = scale;
-        InputStream scaleInput = requireContext().getContentResolver().openInputStream(uri);
-        Bitmap scaledBitmap = BitmapFactory.decodeStream(scaleInput, null, scaleOptions);
-        if (scaleInput != null) scaleInput.close();
-
-        return scaledBitmap;
-    }
-
-    private void showDetectionResults(String foodName, double confidence, List<String> allergens) {
-        binding.foodNameText.setText(foodName);
-
-        DecimalFormat df = new DecimalFormat("#.#");
-        binding.confidenceText.setText(String.format("%s%%", df.format(confidence * 100)));
-
-        if (allergens != null && !allergens.isEmpty()) {
-            allergenAdapter = new AllergenAdapter(allergens);
-            binding.allergensRecyclerView.setAdapter(allergenAdapter);
-            binding.allergensRecyclerView.setVisibility(View.VISIBLE);
-            binding.noAllergensText.setVisibility(View.GONE);
-        } else {
-            binding.allergensRecyclerView.setVisibility(View.GONE);
-            binding.noAllergensText.setVisibility(View.VISIBLE);
-        }
-        binding.resultsCard.setVisibility(View.VISIBLE);
-    }
-
-    private void hideResults() {
-        binding.resultsCard.setVisibility(View.GONE);
-    }
-
-    private void showLoading(boolean show) {
-        binding.progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        binding.detectAllergenButton.setEnabled(!show);
-        binding.galleryButton.setEnabled(!show);
-        binding.cameraButton.setEnabled(!show);
+        startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+                Bundle extras = data.getExtras();
+                selectedBitmap = (Bitmap) extras.get("data");
+                displaySelectedImage();
+            } else if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
+                Uri selectedImageUri = data.getData();
+                try {
+                    selectedBitmap = MediaStore.Images.Media.getBitmap(
+                            getActivity().getContentResolver(), selectedImageUri);
+                    displaySelectedImage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void displaySelectedImage() {
+        if (selectedBitmap != null) {
+            imageView.setImageBitmap(selectedBitmap);
+            placeholderLayout.setVisibility(View.GONE);
+            btnDetect.setVisibility(View.VISIBLE);
+            resultCard.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == REQUEST_CAMERA_PERMISSION) {
+                openCamera();
+            } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
+                openGallery();
+            }
+        } else {
+            Toast.makeText(getContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void detectAllergen() {
+        progressBar.setVisibility(View.VISIBLE);
+        btnDetect.setEnabled(false);
+        resultCard.setVisibility(View.VISIBLE);
+        tvResult.setText(getString(R.string.analyzing));
+
+        // Convert bitmap to base64
+        String base64Image = bitmapToBase64(selectedBitmap);
+
+        // Create OkHttp client
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+        // Create request body - using form data for Roboflow API
+        RequestBody requestBody = RequestBody.create(
+                MediaType.parse("application/x-www-form-urlencoded"),
+                base64Image);
+
+        // Create request with proper Roboflow endpoint
+        String url = API_URL + "/" + MODEL_ID + "?api_key=" + API_KEY + "&confidence=0.3&overlap=0.3";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .post(requestBody)
+                .build();
+
+        // Execute request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        progressBar.setVisibility(View.GONE);
+                        btnDetect.setEnabled(true);
+                        tvResult.setText("Error: " + e.getMessage());
+                        Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body().string();
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        progressBar.setVisibility(View.GONE);
+                        btnDetect.setEnabled(true);
+
+                        if (response.isSuccessful()) {
+                            parseAndDisplayResult(responseBody);
+                        } else {
+                            tvResult.setText("Error: " + response.code() + " " + response.message());
+                            Toast.makeText(getContext(), getString(R.string.detection_failed), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    private void parseAndDisplayResult(String jsonResponse) {
+        try {
+            JSONObject response = new JSONObject(jsonResponse);
+            JSONArray predictions = response.getJSONArray("predictions");
+
+            if (predictions.length() > 0) {
+                // Get the highest confidence prediction
+                JSONObject bestPrediction = null;
+                double highestConfidence = 0;
+
+                for (int i = 0; i < predictions.length(); i++) {
+                    JSONObject prediction = predictions.getJSONObject(i);
+                    double confidence = prediction.getDouble("confidence");
+
+                    if (confidence > highestConfidence) {
+                        highestConfidence = confidence;
+                        bestPrediction = prediction;
+                    }
+                }
+
+                if (bestPrediction != null && highestConfidence > 0.3) { // Minimum confidence threshold
+                    String detectedClass = bestPrediction.getString("class");
+                    double confidence = bestPrediction.getDouble("confidence");
+
+                    // Check if detected class is non-food item
+                    if (isNonFoodClass(detectedClass)) {
+                        displayNonFoodResult(detectedClass, confidence);
+                    } else {
+                        displayAllergenResult(detectedClass, confidence);
+                    }
+                } else {
+                    tvResult.setText(getString(R.string.food_not_identified));
+                }
+            } else {
+                tvResult.setText(getString(R.string.no_food_detected));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            tvResult.setText("Error parsing result: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Check if the detected class is a non-food item (human/unknown or object)
+     */
+    private boolean isNonFoodClass(String className) {
+        String lowerClassName = className.toLowerCase();
+
+        // Check for human/person related classes
+        if (lowerClassName.contains("unknown") ||
+                lowerClassName.contains("human") ||
+                lowerClassName.contains("person") ||
+                lowerClassName.contains("people") ||
+                lowerClassName.equals("manusia")) {
+            return true;
+        }
+
+        // Check for general object classes
+        if (lowerClassName.contains("object") ||
+                lowerClassName.contains("thing") ||
+                lowerClassName.contains("item") ||
+                lowerClassName.equals("benda") ||
+                lowerClassName.equals("barang")) {
+            return true;
+        }
+
+        // You can add more non-food class patterns here as needed
+        return false;
+    }
+
+    private void saveToHistory(String foodName, double confidence, List<String> allergens, String status) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String imageBase64 = selectedBitmap != null ? bitmapToBase64(selectedBitmap) : null;
+
+        HistoryItem historyItem = new HistoryItem();
+        historyItem.setUserId(userId);
+        historyItem.setFoodName(foodName);
+        historyItem.setImageBase64(imageBase64);
+        historyItem.setAllergens(allergens);
+        historyItem.setConfidence(confidence);
+        historyItem.setStatus(status);
+        historyItem.setScanDate(new Date());
+
+        FirebaseFirestore.getInstance()
+                .collection("history")
+                .add(historyItem)
+                .addOnSuccessListener(documentReference -> {
+                    // History saved successfully
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Riwayat berhasil disimpan", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle error
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Gagal menyimpan ke riwayat: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Modifikasi method displayAllergenResult
+    private void displayAllergenResult(String foodName, double confidence) {
+        StringBuilder result = new StringBuilder();
+        result.append("🍽️ Makanan Terdeteksi: ").append(formatFoodName(foodName)).append("\n");
+        result.append("📊 Tingkat Kepercayaan: ").append(String.format("%.1f%%", confidence * 100)).append("\n\n");
+
+        List<String> allergens = allergenData.get(foodName.toLowerCase().replace(" ", "_"));
+
+        if (allergens != null && !allergens.isEmpty()) {
+            result.append("⚠️ PERINGATAN ALERGEN:\n");
+            for (String allergen : allergens) {
+                result.append("• ").append(getAllergenDisplayName(allergen)).append("\n");
+            }
+            result.append("\n💡 Harap periksa bahan-bahan makanan jika Anda memiliki alergi terhadap zat-zat di atas.");
+        } else {
+            result.append("✅ Tidak ada alergen yang diketahui untuk makanan ini.\n");
+            result.append("💡 Namun, tetap berhati-hati jika Anda memiliki alergi khusus.");
+        }
+
+        tvResult.setText(result.toString());
+
+        // Save to history
+        saveToHistory(foodName, confidence, allergens, "success");
+    }
+
+    // Modifikasi method displayNonFoodResult
+    private void displayNonFoodResult(String detectedClass, double confidence) {
+        StringBuilder result = new StringBuilder();
+        result.append("❌ BUKAN MAKANAN\n\n");
+        result.append("🍽️ Aplikasi ini dirancang khusus untuk mendeteksi makanan dan alergennya.\n\n");
+        result.append("📱 Silakan ambil foto makanan untuk mendapatkan informasi alergen yang akurat.\n\n");
+        result.append("💡 Tips: Pastikan foto menampilkan makanan dengan jelas dan pencahayaan yang cukup.");
+
+        tvResult.setText(result.toString());
+
+        // Save to history
+        saveToHistory("Bukan Makanan", confidence, null, "no_food");
+    }
+
+    private String formatFoodName(String foodName) {
+        // Convert underscore to space and capitalize each word
+        String[] words = foodName.replace("_", " ").split(" ");
+        StringBuilder formatted = new StringBuilder();
+
+        for (String word : words) {
+            if (formatted.length() > 0) formatted.append(" ");
+            if (word.length() > 0) {
+                formatted.append(word.substring(0, 1).toUpperCase()).append(word.substring(1));
+            }
+        }
+
+        return formatted.toString();
+    }
+
+    private String getAllergenDisplayName(String allergen) {
+        switch (allergen.toLowerCase()) {
+            case "telur": return "Telur";
+            case "gluten": return "Gluten (Gandum)";
+            case "cabai": return "Cabai/Pedas";
+            case "santan": return "Santan (Kelapa)";
+            case "seafood": return "Seafood (Makanan Laut)";
+            case "kacang": return "Kacang-kacangan";
+            case "kedelai": return "Kedelai";
+            case "kecambah": return "Kecambah";
+            case "kerang": return "Kerang";
+            default: return allergen;
+        }
     }
 }

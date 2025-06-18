@@ -67,9 +67,14 @@ dependencies {
 
     // CardView (Sudah termasuk di dalam Material, tapi tidak apa-apa jika dideklarasikan)
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation(libs.swiperefreshlayout)
+    implementation(libs.room.common.jvm)
+    implementation(libs.room.runtime.android)
 
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
 }

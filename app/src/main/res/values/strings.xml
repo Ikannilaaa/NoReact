@@ -1,11 +1,33 @@
 <resources>
-    <string name="app_name">NoReact</string>
-    <string name="title_scan">Scan Risk</string>
-    <string name="title_chat">Ask AI</string>
-    <string name="title_history">Food History</string>
+    <string name="title_home">Home</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_scan">Scan</string>
     <string name="title_account">Account</string>
+
     <string name="title_login">Login</string>
     <string name="title_register">Register</string>
     <string name="logout">Logout</string>
     <string name="user_email">Email: %s</string>
+
+    <!-- Scan Fragment -->
+    <string name="scan_title">Allergen Risk Assessor</string>
+    <string name="scan_placeholder">Pilih gambar makanan untuk\nmendeteksi alergen</string>
+    <string name="btn_detect">DETECT ALLERGEN</string>
+    <string name="analyzing">Analyzing...</string>
+    <string name="select_image_first">Pilih gambar terlebih dahulu</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="error_loading_image">Error loading image</string>
+    <string name="network_error">Network error occurred</string>
+    <string name="detection_failed">Detection failed</string>
+    <string name="food_not_identified">Makanan tidak dapat diidentifikasi.\nCoba dengan gambar yang lebih jelas.</string>
+    <string name="no_food_detected">Tidak ada makanan yang terdeteksi.\nCoba dengan gambar lain.</string>
+    <string name="app_name">NoReact</string>
+
+    <!-- History related strings -->
+    <string name="title_history">Riwayat</string>
+    <string name="no_history_available">Belum ada riwayat scan</string>
+    <string name="start_scanning_message">Mulai scan makanan untuk melihat riwayat</string>
+    <string name="history_detail_title">Detail Riwayat</string>
+    <string name="confidence_format">Kepercayaan: %.1f%%</string>
+    <string name="scan_date_format">%s</string>
 </resources>
