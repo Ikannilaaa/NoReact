@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class HistoryDetailActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
     private SimpleDateFormat dateFormat;
+    private ImageButton backButtonDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,11 @@ public class HistoryDetailActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Detail Riwayat");
+        }
+
+        backButtonDetail = findViewById(R.id.backButtonDetail);
+        if (backButtonDetail != null) {
+            backButtonDetail.setOnClickListener(v -> onBackPressed());
         }
 
         initViews();

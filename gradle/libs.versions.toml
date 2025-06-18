@@ -22,6 +22,7 @@ firebaseStorage = "21.0.1"
 swiperefreshlayout = "1.1.0"
 roomCommonJvm = "2.7.1"
 roomRuntimeAndroid = "2.7.1"
+navigationCommonAndroid = "2.9.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -45,6 +46,7 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
+navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

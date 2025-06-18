@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -19,6 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -54,9 +58,8 @@ import okhttp3.Response;
 public class ScanFragment extends Fragment {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
-    private static final int REQUEST_STORAGE_PERMISSION = 101;
+    private static final int REQUEST_IMAGE_GALLERY_LEGACY = 2;
 
     private ImageView imageView;
     private Button btnCamera, btnGallery, btnDetect;
@@ -66,12 +69,13 @@ public class ScanFragment extends Fragment {
     private CardView resultCard;
     private Bitmap selectedBitmap;
 
+    private ActivityResultLauncher<PickVisualMediaRequest> photoPickerLauncher;
+
     // API Roboflow configuration
     private static final String API_URL = "https://detect.roboflow.com";
     private static final String API_KEY = "wVtzCReuYMeUQAhnnM83";
     private static final String MODEL_ID = "indonesianfoodallergendetector-zd40l/7";
 
-    // Allergen data
     private Map<String, List<String>> allergenData;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -80,6 +84,7 @@ public class ScanFragment extends Fragment {
 
         initViews(root);
         initAllergenData();
+        setupPhotoPicker();
         setupClickListeners();
 
         return root;
@@ -123,22 +128,38 @@ public class ScanFragment extends Fragment {
         allergenData.put("telur_dadar", Arrays.asList("telur"));
     }
 
+    private void setupPhotoPicker() {
+        photoPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        try {
+                            selectedBitmap = MediaStore.Images.Media.getBitmap(
+                                    requireActivity().getContentResolver(), uri);
+                            displaySelectedImage();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
     private void setupClickListeners() {
         btnCamera.setOnClickListener(v -> {
-            if (checkCameraPermission()) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                requestCameraPermission();
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
             }
         });
 
-        btnGallery.setOnClickListener(v -> {
-            if (checkStoragePermission()) {
-                openGallery();
-            } else {
-                requestStoragePermission();
-            }
-        });
+        btnGallery.setOnClickListener(v -> openGallery());
 
         btnDetect.setOnClickListener(v -> {
             if (selectedBitmap != null) {
@@ -149,26 +170,6 @@ public class ScanFragment extends Fragment {
         });
     }
 
-    private boolean checkCameraPermission() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private boolean checkStoragePermission() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-    }
-
-    private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
-    }
-
     private void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -177,8 +178,18 @@ public class ScanFragment extends Fragment {
     }
 
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_IMAGE_GALLERY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ uses Photo Picker
+            photoPickerLauncher.launch(
+                    new PickVisualMediaRequest.Builder()
+                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                            .build()
+            );
+        } else {
+            // Android 12 and below fallback
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, REQUEST_IMAGE_GALLERY_LEGACY);
+        }
     }
 
     @Override
@@ -190,7 +201,7 @@ public class ScanFragment extends Fragment {
                 Bundle extras = data.getExtras();
                 selectedBitmap = (Bitmap) extras.get("data");
                 displaySelectedImage();
-            } else if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
+            } else if (requestCode == REQUEST_IMAGE_GALLERY_LEGACY && data != null) {
                 Uri selectedImageUri = data.getData();
                 try {
                     selectedBitmap = MediaStore.Images.Media.getBitmap(
@@ -204,28 +215,25 @@ public class ScanFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CAMERA_PERMISSION &&
+                grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            Toast.makeText(getContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void displaySelectedImage() {
         if (selectedBitmap != null) {
             imageView.setImageBitmap(selectedBitmap);
             placeholderLayout.setVisibility(View.GONE);
             btnDetect.setVisibility(View.VISIBLE);
             resultCard.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == REQUEST_CAMERA_PERMISSION) {
-                openCamera();
-            } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
-                openGallery();
-            }
-        } else {
-            Toast.makeText(getContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
         }
     }
 

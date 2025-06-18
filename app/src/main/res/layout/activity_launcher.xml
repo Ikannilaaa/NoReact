@@ -5,7 +5,8 @@
     android:background="@drawable/tl100tr100bffffff75"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.login.LauncherActivity">
 
     <View
         android:layout_width="match_parent"

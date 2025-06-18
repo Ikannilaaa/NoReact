@@ -1,0 +1,486 @@
+[
+  {
+    "name": "Ayam Geprek",
+    "image": "ayam_geprek",
+    "ingredients": [
+      "1 potong ayam",
+      "Tepung serbaguna",
+      "1 butir telur",
+      "Cabai rawit",
+      "Bawang putih",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Lumuri ayam dengan bumbu dan tepung, lalu goreng hingga matang.",
+      "Ulek cabai, bawang putih, garam, dan minyak panas.",
+      "Geprek ayam goreng dengan sambal tersebut.",
+      "Sajikan dengan nasi hangat."
+    ],
+    "duration": "30 MINUTES",
+    "allergens": ["telur", "gluten", "cabai"]
+  },
+  {
+    "name": "Ayam Goreng",
+    "image": "ayam_goreng",
+    "ingredients": [
+      "1 ekor ayam",
+      "Bumbu marinasi (bawang putih, kunyit, ketumbar)",
+      "Tepung terigu",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Marinasi ayam dengan bumbu selama 30 menit.",
+      "Gulingkan ayam ke tepung terigu tipis-tipis.",
+      "Goreng ayam hingga kuning keemasan dan matang.",
+      "Sajikan hangat."
+    ],
+    "duration": "45 MINUTES",
+    "allergens": ["gluten"]
+  },
+  {
+    "name": "Ayam Pop",
+    "image": "ayam_pop",
+    "ingredients": [
+      "1 ekor ayam",
+      "Air kelapa",
+      "Bawang putih",
+      "Kemiri",
+      "Jahe",
+      "Lengkuas",
+      "Daun salam",
+      "Sereh",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Rebus ayam dengan bumbu halus dan air kelapa hingga empuk.",
+      "Angkat dan tiriskan ayam.",
+      "Goreng sebentar dalam minyak panas hingga berkulit tipis dan berwarna pucat.",
+      "Sajikan dengan sambal."
+    ],
+    "duration": "60 MINUTES",
+    "allergens": ["santan"]
+  },
+  {
+    "name": "Cumi Goreng",
+    "image": "cumi_goreng",
+    "ingredients": [
+      "250 gr cumi-cumi",
+      "Tepung bumbu serbaguna",
+      "Telur",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Bersihkan cumi, potong sesuai selera.",
+      "Celupkan cumi ke kocokan telur lalu gulingkan ke tepung bumbu.",
+      "Goreng hingga kuning keemasan dan renyah.",
+      "Sajikan hangat."
+    ],
+    "duration": "25 MINUTES",
+    "allergens": ["seafood", "gluten"]
+  },
+  {
+    "name": "Daging Rendang",
+    "image": "daging_rendang",
+    "ingredients": [
+      "500 gr daging sapi",
+      "Santan kental",
+      "Bumbu rendang (cabai, bawang merah, bawang putih, jahe, kunyit, kemiri, lengkuas, sereh, daun kunyit, daun jeruk, asam kandis)",
+      "Garam",
+      "Gula"
+    ],
+    "instructions": [
+      "Potong daging sapi kotak-kotak.",
+      "Masak santan dengan bumbu halus hingga mendidih and mengeluarkan minyak.",
+      "Masukkan daging dan masak terus dengan api kecil hingga santan mengering dan bumbu meresap sempurna.",
+      "Aduk sesekali agar tidak gosong. Proses ini memakan waktu lama."
+    ],
+    "duration": "180 MINUTES",
+    "allergens": ["santan", "cabai"]
+  },
+  {
+    "name": "Dendeng Batokok",
+    "image": "dendeng_batokok",
+    "ingredients": [
+      "250 gr daging sapi (iris tipis)",
+      "Cabai merah",
+      "Bawang merah",
+      "Bawang putih",
+      "Tomat",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Rebus daging hingga empuk, lalu tiriskan dan pipihkan (batokok).",
+      "Goreng daging sebentar hingga matang.",
+      "Ulek kasar cabai, bawang merah, bawang putih, dan tomat.",
+      "Tumis bumbu ulek hingga harum, masukkan daging, aduk rata.",
+      "Sajikan."
+    ],
+    "duration": "60 MINUTES",
+    "allergens": ["cabai"]
+  },
+  {
+    "name": "Gado Gado",
+    "image": "gado_gado",
+    "ingredients": [
+      "Lontong",
+      "Kentang rebus",
+      "Telur rebus",
+      "Tahu goreng",
+      "Tempe goreng",
+      "Sayuran rebus (kangkung, kacang panjang, tauge, kol)",
+      "Bumbu kacang (kacang tanah, bawang putih, cabai, gula merah, asam jawa, garam)",
+      "Kerupuk",
+      "Bawang goreng"
+    ],
+    "instructions": [
+      "Tata semua bahan di piring.",
+      "Siram dengan bumbu kacang yang sudah dihaluskan dan diencerkan.",
+      "Taburi bawang goreng dan sajikan dengan kerupuk."
+    ],
+    "duration": "40 MINUTES",
+    "allergens": ["kacang", "telur", "kedelai", "kecambah", "cabai"]
+  },
+  {
+    "name": "Ayam Gulai",
+    "image": "ayam_gulai",
+    "ingredients": [
+      "1 ekor ayam",
+      "Santan",
+      "Bumbu gulai (bawang merah, bawang putih, kunyit, jahe, lengkuas, ketumbar, jintan, merica, cabai, daun salam, daun jeruk, sereh)",
+      "Garam",
+      "Gula"
+    ],
+    "instructions": [
+      "Potong ayam menjadi beberapa bagian.",
+      "Tumis bumbu halus hingga harum.",
+      "Masukkan ayam, aduk hingga berubah warna.",
+      "Tuang santan, masak dengan api kecil hingga ayam empuk dan kuah mengental.",
+      "Koreksi rasa dan sajikan."
+    ],
+    "duration": "60 MINUTES",
+    "allergens": ["santan", "cabai"]
+  },
+  {
+    "name": "Gulai Ikan",
+    "image": "gulai_ikan",
+    "ingredients": [
+      "500 gr ikan (kakap/tongkol)",
+      "Santan",
+      "Bumbu gulai (bawang merah, bawang putih, kunyit, jahe, lengkuas, ketumbar, jintan, merica, cabai, daun salam, daun jeruk, sereh, asam kandis)",
+      "Garam",
+      "Gula"
+    ],
+    "instructions": [
+      "Bersihkan ikan, lumuri dengan jeruk nipis.",
+      "Tumis bumbu halus hingga harum.",
+      "Masukkan ikan, aduk perlahan.",
+      "Tuang santan, masak dengan api kecil hingga ikan matang dan kuah mengental.",
+      "Koreksi rasa dan sajikan."
+    ],
+    "duration": "50 MINUTES",
+    "allergens": ["santan", "seafood", "cabai"]
+  },
+  {
+    "name": "Gulai Tambusu",
+    "image": "gulai_tambusu",
+    "ingredients": [
+      "Usus sapi/kambing",
+      "Telur",
+      "Santan",
+      "Bumbu gulai (bawang merah, bawang putih, cabai, kunyit, jahe, lengkuas, sereh, daun salam, daun jeruk)",
+      "Garam",
+      "Gula"
+    ],
+    "instructions": [
+      "Bersihkan usus, isi dengan adonan telur berbumbu.",
+      "Ikat ujungnya agar isi tidak keluar.",
+      "Masak usus bersama bumbu gulai dan santan hingga matang dan empuk.",
+      "Potong-potong dan sajikan."
+    ],
+    "duration": "90 MINUTES",
+    "allergens": ["telur", "santan", "cabai"]
+  },
+  {
+    "name": "Gulai Tunjang",
+    "image": "gulai_tunjang",
+    "ingredients": [
+      "500 gr tunjang sapi (kaki sapi)",
+      "Santan",
+      "Bumbu gulai (bawang merah, bawang putih, cabai, kunyit, jahe, lengkuas, sereh, daun salam, daun jeruk)",
+      "Garam",
+      "Gula"
+    ],
+    "instructions": [
+      "Rebus tunjang hingga empuk, potong-potong.",
+      "Tumis bumbu halus hingga harum.",
+      "Masukkan tunjang, aduk rata.",
+      "Tuang santan, masak hingga kuah mengental dan bumbu meresap.",
+      "Sajikan."
+    ],
+    "duration": "120 MINUTES",
+    "allergens": ["santan", "cabai"]
+  },
+  {
+    "name": "Ikan Goreng",
+    "image": "ikan_goreng",
+    "ingredients": [
+      "1 ekor ikan (gurame/nila)",
+      "Bumbu marinasi (kunyit, bawang putih, ketumbar)",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Bersihkan ikan, kerat-kerat badannya.",
+      "Lumuri ikan dengan bumbu marinasi dan garam, diamkan 15 menit.",
+      "Goreng ikan dalam minyak panas hingga kuning keemasan and matang.",
+      "Sajikan dengan sambal."
+    ],
+    "duration": "30 MINUTES",
+    "allergens": ["seafood"]
+  },
+  {
+    "name": "Kentang Goreng",
+    "image": "kentang_goreng",
+    "ingredients": [
+      "500 gr kentang",
+      "Tepung maizena (opsional)",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Kupas dan potong kentang memanjang seperti stik.",
+      "Rendam dalam air dingin sebentar, tiriskan dan keringkan.",
+      "Goreng kentang dalam minyak panas hingga kuning keemasan dan renyah.",
+      "Angkat, taburi garam, dan sajikan."
+    ],
+    "duration": "20 MINUTES",
+    "allergens": ["gluten"]
+  },
+  {
+    "name": "Lontong Kupang",
+    "image": "lontong_kupang",
+    "ingredients": [
+      "Lontong",
+      "Kupang (kerang kecil)",
+      "Lentho (perkedel singkong)",
+      "Petis udang",
+      "Bawang putih goreng",
+      "Cabai rawit",
+      "Garam",
+      "Jeruk nipis"
+    ],
+    "instructions": [
+      "Tata irisan lontong dan lentho di piring.",
+      "Siram dengan kuah kupang dan petis yang sudah diencerkan dan dibumbui.",
+      "Tambahkan bawang putih goreng, cabai, dan perasan jeruk nipis.",
+      "Sajikan."
+    ],
+    "duration": "45 MINUTES",
+    "allergens": ["kerang", "gluten", "cabai"]
+  },
+  {
+    "name": "Lumpia",
+    "image": "lumpia",
+    "ingredients": [
+      "Kulit lumpia",
+      "Isian (rebung, ayam cincang, udang, telur, tauge, wortel)",
+      "Bawang putih",
+      "Kecap manis",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Tumis bawang putih hingga harum, masukkan isian dan masak hingga matang.",
+      "Ambil selembar kulit lumpia, beri isian, lipat dan gulung.",
+      "Goreng lumpia hingga kuning keemasan.",
+      "Sajikan dengan saus sambal atau acar."
+    ],
+    "duration": "40 MINUTES",
+    "allergens": ["gluten", "telur", "kedelai", "cabai"]
+  },
+  {
+    "name": "Mie Goreng",
+    "image": "mie_goreng",
+    "ingredients": [
+      "200 gr mie telur",
+      "Ayam/udang",
+      "Sayuran (sawi, kol, tauge)",
+      "Telur",
+      "Bawang merah",
+      "Bawang putih",
+      "Cabai",
+      "Kecap manis",
+      "Saus tiram",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Rebus mie hingga matang, tiriskan.",
+      "Tumis bawang merah, bawang putih, dan cabai hingga harum.",
+      "Masukkan ayam/udang, masak hingga berubah warna.",
+      "Tambahkan sayuran, masak hingga layu.",
+      "Masukkan mie, telur, kecap manis, and saus tiram, aduk rata hingga matang.",
+      "Sajikan."
+    ],
+    "duration": "30 MINUTES",
+    "allergens": ["gluten", "telur", "kedelai", "cabai"]
+  },
+  {
+    "name": "Nasi Goreng",
+    "image": "nasi_goreng",
+    "ingredients": [
+      "1 porsi nasi putih",
+      "Telur",
+      "Ayam/sosis/bakso",
+      "Bawang merah",
+      "Bawang putih",
+      "Cabai",
+      "Kecap manis",
+      "Garam",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Tumis bawang merah, bawang putih, and cabai hingga harum.",
+      "Masukkan telur, orak-arik.",
+      "Tambahkan ayam/sosis/bakso, masak hingga matang.",
+      "Masukkan nasi putih, aduk rata.",
+      "Bumbui dengan kecap manis and garam, aduk hingga semua tercampur rata and nasi sedikit kering.",
+      "Sajikan dengan pelengkap."
+    ],
+    "duration": "20 MINUTES",
+    "allergens": ["telur", "kedelai", "cabai"]
+  },
+  {
+    "name": "Pecel Sayur",
+    "image": "pecel_sayur",
+    "ingredients": [
+      "Sayuran rebus (kangkung, kacang panjang, tauge, bayam, timun)",
+      "Bumbu pecel (kacang tanah, gula merah, asam jawa, cabai, bawang putih, kencur, daun jeruk)",
+      "Lontong (opsional)",
+      "Rempeyek"
+    ],
+    "instructions": [
+      "Tata sayuran rebus di piring.",
+      "Siram dengan bumbu pecel yang sudah dihaluskan and diencerkan.",
+      "Sajikan dengan lontong atau nasi and rempeyek."
+    ],
+    "duration": "30 MINUTES",
+    "allergens": ["kacang", "kecambah", "cabai"]
+  },
+  {
+    "name": "Rawon",
+    "image": "rawon",
+    "ingredients": [
+      "500 gr daging sapi (sandung lamur)",
+      "Kluwek",
+      "Bumbu dasar (bawang merah, bawang putih, kemiri, kunyit, jahe, lengkuas)",
+      "Daun jeruk",
+      "Sereh",
+      "Garam",
+      "Tauge pendek",
+      "Telur asin",
+      "Nasi putih"
+    ],
+    "instructions": [
+      "Rebus daging hingga empuk, potong-potong.",
+      "Haluskan bumbu dasar bersama kluwek yang sudah direndam air panas.",
+      "Tumis bumbu halus hingga harum, masukkan daging.",
+      "Tambahkan air kaldu sisa rebusan daging, masak hingga mendidih and bumbu meresap.",
+      "Sajikan rawon dengan nasi, tauge pendek, and telur asin."
+    ],
+    "duration": "120 MINUTES",
+    "allergens": ["kedelai"]
+  },
+  {
+    "name": "Sate",
+    "image": "sate",
+    "ingredients": [
+      "500 gr daging (ayam/kambing/sapi)",
+      "Tusuk sate",
+      "Bumbu marinasi (kecap manis, bawang putih, ketumbar, air asam jawa)",
+      "Bumbu kacang (kacang tanah, bawang putih, cabai, gula merah, air asam jawa, kecap manis)",
+      "Bawang merah iris",
+      "Cabai rawit iris"
+    ],
+    "instructions": [
+      "Potong daging dadu, tusuk ke tusuk sate.",
+      "Lumuri dengan bumbu marinasi, diamkan 30 menit.",
+      "Bakar sate di atas bara api sambil dioles bumbu hingga matang.",
+      "Sajikan dengan bumbu kacang, irisan bawang merah, and cabai rawit."
+    ],
+    "duration": "60 MINUTES",
+    "allergens": ["kacang", "kedelai", "cabai"]
+  },
+  {
+    "name": "Soto",
+    "image": "soto",
+    "ingredients": [
+      "Ayam/daging sapi",
+      "Santan (opsional)",
+      "Bumbu soto (bawang merah, bawang putih, kunyit, jahe, kemiri, ketumbar, jintan, merica, sereh, daun jeruk, daun salam)",
+      "Garam",
+      "Lontong/nasi",
+      "Tauge",
+      "Kentang goreng",
+      "Telur rebus",
+      "Daun seledri",
+      "Bawang goreng",
+      "Jeruk nipis",
+      "Sambal"
+    ],
+    "instructions": [
+      "Rebus ayam/daging hingga empuk, angkat, suwir/potong.",
+      "Tumis bumbu halus hingga harum, masukkan ke dalam kaldu rebusan daging/ayam.",
+      "Tambahkan santan (jika menggunakan), masak hingga mendidih and matang.",
+      "Sajikan soto dengan lontong/nasi, suwiran ayam/daging, tauge, kentang goreng, telur rebus, seledri, bawang goreng, jeruk nipis, and sambal."
+    ],
+    "duration": "90 MINUTES",
+    "allergens": ["santan", "telur", "kecambah", "cabai"]
+  },
+  {
+    "name": "Telur Balado",
+    "image": "telur_balado",
+    "ingredients": [
+      "4 butir telur",
+      "Cabai merah",
+      "Bawang merah",
+      "Bawang putih",
+      "Tomat",
+      "Garam",
+      "Gula",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Rebus telur hingga matang, kupas and goreng sebentar hingga berkulit.",
+      "Haluskan cabai, bawang merah, bawang putih, and tomat.",
+      "Tumis bumbu halus hingga harum and matang.",
+      "Masukkan telur, aduk rata dengan bumbu balado.",
+      "Koreksi rasa and sajikan."
+    ],
+    "duration": "30 MINUTES",
+    "allergens": ["telur", "cabai"]
+  },
+  {
+    "name": "Telur Dadar",
+    "image": "telur_dadar",
+    "ingredients": [
+      "2 butir telur",
+      "Bawang merah (iris tipis)",
+      "Cabai rawit (iris tipis)",
+      "Daun bawang (iris tipis)",
+      "Garam",
+      "Lada",
+      "Minyak goreng"
+    ],
+    "instructions": [
+      "Kocok telur dengan irisan bawang merah, cabai, daun bawang, garam, and lada.",
+      "Panaskan minyak goreng di wajan.",
+      "Tuang adonan telur, masak hingga kedua sisi matang and kuning keemasan.",
+      "Sajikan hangat."
+    ],
+    "duration": "10 MINUTES",
+    "allergens": ["telur"]
+  }
+]
