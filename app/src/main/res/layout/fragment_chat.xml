@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1E1E">
+    android:background="#E2CC85">
 
-    <!-- Chat RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chat"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:clipToPadding="false"
         android:scrollbars="none" />
 
-    <!-- Input Layout -->
     <LinearLayout
         android:id="@+id/layout_input"
         android:layout_width="match_parent"
@@ -24,17 +22,16 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="#2A2A2A"
+        android:background="#FFFFFF"
         android:elevation="8dp">
 
-        <!-- Message Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
             app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#3A3A3A"
+            app:boxBackgroundColor="#FFFFFF"
             app:boxCornerRadiusTopStart="24dp"
             app:boxCornerRadiusTopEnd="24dp"
             app:boxCornerRadiusBottomStart="24dp"
@@ -47,8 +44,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ketik pesan Anda..."
-                android:textColor="#FFFFFF"
-                android:textColorHint="#888888"
+                app:hintAnimationEnabled="false"
+                android:textColor="#000000"
+                android:textColorHint="#ffffff"
                 android:maxLines="4"
                 android:inputType="textCapSentences|textMultiLine"
                 android:imeOptions="actionSend"
@@ -56,7 +54,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Send Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_send"
             android:layout_width="56dp"

@@ -129,7 +129,7 @@ public class ChatFragment extends Fragment {
             public void onResponse(Call<GeminiResponse> call, Response<GeminiResponse> response) {
                 // Re-enable send button
                 btnSend.setEnabled(true);
-                btnSend.setText("SEND");
+                btnSend.setText("➤");
 
                 // Hide loading message
                 hideLoadingMessage();
