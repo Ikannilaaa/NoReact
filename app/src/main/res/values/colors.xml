@@ -33,4 +33,15 @@
 
     <!-- Utility -->
     <color name="transparent">#00000000</color>
+
+    <color name="colorPrimaryDark">#FF8800</color>
+    <color name="colorAccent">#FFC107</color>
+
+    <!-- Chat colors -->
+    <color name="user_message_bg">#FF5722</color>
+    <color name="ai_message_bg">#FF8800</color>
+    <color name="chat_background">#F5F5F5</color>
+    <color name="input_background">#FFFFFF</color>
+    <color name="text_white">#FFFFFF</color>
+
 </resources>

@@ -30,4 +30,14 @@
     <string name="history_detail_title">Detail Riwayat</string>
     <string name="confidence_format">Kepercayaan: %.1f%%</string>
     <string name="scan_date_format">%s</string>
+
+    <!-- Chat strings -->
+    <string name="hint_message">Ketik pesan Anda...</string>
+    <string name="ai_typing">AI sedang mengetik...</string>
+    <string name="error_empty_message">Pesan tidak boleh kosong</string>
+    <string name="error_connection">Koneksi gagal</string>
+    <string name="error_no_response">Tidak ada respons dari AI</string>
+    <string name="welcome_message">Halo! Saya adalah asisten AI Anda. Ada yang bisa saya bantu?</string>
+
+
 </resources>
