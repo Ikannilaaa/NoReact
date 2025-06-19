@@ -121,11 +121,13 @@ public class ScanFragment extends Fragment {
         allergenData.put("mie_goreng", Arrays.asList("gluten", "telur", "kedelai", "cabai"));
         allergenData.put("nasi_goreng", Arrays.asList("telur", "kedelai", "cabai"));
         allergenData.put("pecel_sayur", Arrays.asList("kacang", "kecambah", "cabai"));
-        allergenData.put("rawon", Arrays.asList("kedelai"));
+        allergenData.put("rawon", Arrays.asList("kedelai, cabai, telur"));
         allergenData.put("sate", Arrays.asList("kacang", "kedelai", "cabai"));
         allergenData.put("soto", Arrays.asList("santan", "telur", "kecambah", "cabai"));
         allergenData.put("telur_balado", Arrays.asList("telur", "cabai"));
         allergenData.put("telur_dadar", Arrays.asList("telur"));
+        allergenData.put("sambal", Arrays.asList("cabai"));
+        allergenData.put("rendang", Arrays.asList("santan", "cabai"));
     }
 
     private void setupPhotoPicker() {
