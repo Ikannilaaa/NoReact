@@ -73,8 +73,12 @@ public class ScanFragment extends Fragment {
 
     // API Roboflow configuration
     private static final String API_URL = "https://detect.roboflow.com";
-    private static final String API_KEY = "wVtzCReuYMeUQAhnnM83";
-    private static final String MODEL_ID = "indonesianfoodallergendetector-zd40l/7";
+    private static final String API_KEY = "7nLgnVoKEWdxnX3wl6WL";
+
+    private static final String MODEL_ID = "indonesianfoodallergendetector-zd40l-vfu9l/3";
+
+    // Confidence threshold - 60%
+    private static final double CONFIDENCE_THRESHOLD = 0.6;
 
     private Map<String, List<String>> allergenData;
 
@@ -330,7 +334,8 @@ public class ScanFragment extends Fragment {
                     }
                 }
 
-                if (bestPrediction != null && highestConfidence > 0.3) { // Minimum confidence threshold
+                // MODIFIED: Changed minimum confidence threshold from 0.3 to 0.6 (60%)
+                if (bestPrediction != null && highestConfidence >= CONFIDENCE_THRESHOLD) {
                     String detectedClass = bestPrediction.getString("class");
                     double confidence = bestPrediction.getDouble("confidence");
 
@@ -341,7 +346,8 @@ public class ScanFragment extends Fragment {
                         displayAllergenResult(detectedClass, confidence);
                     }
                 } else {
-                    tvResult.setText(getString(R.string.food_not_identified));
+                    // MODIFIED: Display low confidence message
+                    displayLowConfidenceResult(highestConfidence);
                 }
             } else {
                 tvResult.setText(getString(R.string.no_food_detected));
@@ -353,9 +359,17 @@ public class ScanFragment extends Fragment {
         }
     }
 
-    /**
-     * Check if the detected class is a non-food item (human/unknown or object)
-     */
+    // NEW METHOD: Display message for low confidence detection
+    private void displayLowConfidenceResult(double confidence) {
+        StringBuilder result = new StringBuilder();
+        result.append("❓ DETEKSI TIDAK YAKIN\n\n");
+        result.append("⚠️ Makanan tidak dapat diidentifikasi dengan akurat.\n\n");
+        result.append("🔄 Silakan coba lagi dengan foto yang lebih jelas.");
+
+        tvResult.setText(result.toString());
+
+        saveToHistory("error", confidence, null, "error");
+    }
     private boolean isNonFoodClass(String className) {
         String lowerClassName = className.toLowerCase();
 
