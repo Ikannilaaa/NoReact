@@ -61,7 +61,7 @@
                 android:id="@+id/login_button"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="Sign Up"
+                android:text="Log In"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:background="@drawable/gradient_button"
